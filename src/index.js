@@ -79,7 +79,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const todos = user.todos.map((todo) => {
     if (todo.id === id) {
       todo.title = title
-      todo.deadline = deadline
+      todo.deadline = new Date(deadline)
     }
     return todo
 
