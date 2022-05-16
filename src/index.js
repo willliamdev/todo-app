@@ -87,12 +87,24 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   // const todo = user.todos.find((todo) => todo.id === id)
 
   user.todos = todos
-  return response.json(todos)
+  return response.send()
 
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { user } = request
+  const { id } = request.query
+
+  const todos = user.todos.map((todo) => {
+    if (todo.id === id) {
+      todo.done = true
+    }
+    return todo
+  })
+
+  user.todos = todos
+
+  return response.send()
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
