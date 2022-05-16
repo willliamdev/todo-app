@@ -18,7 +18,7 @@ function checksExistsUserAccount(request, response, next) {
   const user = users.find(user => user.username === username)
 
   if (!user) {
-    return response.status(400).json({ error: 'User not found!' })
+    return response.status(404).json({ error: 'User not found!' })
   }
   request.user = user
 
@@ -73,7 +73,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { user } = request
-  const { id } = request.query
+  const { id } = request.params
   const { title, deadline } = request.body
 
   const todos = user.todos.map((todo) => {
@@ -93,7 +93,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   const { user } = request
-  const { id } = request.query
+  const { id } = request.params
 
   const todos = user.todos.map((todo) => {
     if (todo.id === id) {
@@ -109,7 +109,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { user } = request
-  const { id } = request.query
+  const { id } = request.params
 
   const todoIndex = user.todos.findIndex((todo) => {
     return todo.id === id
