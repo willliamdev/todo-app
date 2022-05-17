@@ -30,9 +30,9 @@ function checksIfTodoExists(request, response, next) {
   const { id } = request.params
   const { user } = request
 
-  const todo = user.todos.find(todo => todo.id === id)
+  const hasTodo = user.todos.some(todo => todo.id === id)
 
-  if (!todo) {
+  if (!hasTodo) {
     return response.status(404).json({ error: 'Todo not found!' })
   }
   request.id = id
