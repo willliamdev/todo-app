@@ -61,8 +61,6 @@ app.post('/users', (request, response) => {
   users.push(user)
 
   return response.status(201).json(user)
-
-
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
@@ -98,7 +96,6 @@ app.put('/todos/:id', checksExistsUserAccount, checksIfTodoExists, (request, res
   return response.json(todo)
 
 });
-  // const todo = user.todos.find((todo) => todo.id === id)
 
 app.patch('/todos/:id/done', checksExistsUserAccount, checksIfTodoExists, (request, response) => {
   const { user, id } = request
@@ -107,41 +104,25 @@ app.patch('/todos/:id/done', checksExistsUserAccount, checksIfTodoExists, (reque
   return response.json(todo)
 });
 
-app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  const { user } = request
-  const { id } = request.params
 
-  const todos = user.todos.map((todo) => {
-    if (todo.id === id) {
-      todo.done = true
-    }
-    return todo
-  })
 
-  user.todos = todos
+app.delete('/todos/:id', checksExistsUserAccount, checksIfTodoExists, (request, response) => {
 
-  return response.send()
-});
-
-app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  const { user } = request
-  const { id } = request.params
+  const { user, id } = request
 
   const todoIndex = user.todos.findIndex((todo) => {
     return todo.id === id
   })
+  const indexNotFound = todoIndex === - 1
+
+  if (indexNotFound) {
+    return response.status(404).json({ error: "Todo not Found" })
+  }
 
   user.todos.splice(todoIndex, 1)
 
-  return response.send()
+  return response.status(204).send()
 });
 
-
-
-// extra routes =========
-
-app.get("/users", (resquest, response) => {
-  return response.json(users)
-})
 
 module.exports = app;
